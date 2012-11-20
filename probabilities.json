@@ -1,0 +1,104 @@
+;var data = (function(){
+  'use strict';
+
+  var places = [
+    'go',
+    'mediterranean_ave',
+    'community_chest_1',
+    'baltic_ave',
+    'income_tax',
+    'reading_railroad',
+    'oriental_ave',
+    'chance_1',
+    'vermont_ave',
+    'connecticut_ave',
+    'in_jail',
+    'st_charles_pl',
+    'electric_company',
+    'states_ave',
+    'virginia_ave',
+    'pennsylvania_railroad',
+    'st_james_pl',
+    'community_chest_2',
+    'tennessee_ave',
+    'new_york_ave',
+    'free_parking',
+    'kentucky_ave',
+    'chance_2',
+    'indiana_ave',
+    'illinois_ave',
+    'bo_railroad',
+    'atlantic_ave',
+    'ventnor_ave',
+    'water_works',
+    'marvin_gardens',
+    'go_to_jail',
+    'pacific_ave',
+    'north_carolina_ave',
+    'community_chest_3',
+    'pennsylvania_ave',
+    'short_line',
+    'change_3',
+    'park_pl',
+    'luxury_tax',
+    'boardwalk'
+  ];
+
+  var probs = [3.0961, 2.1314, 1.8849, 2.1624, 2.3285, 2.9631, 2.2621, 0.8650,
+               2.3210, 2.3003, 3.9499, 2.7017, 2.6040, 2.3721, 2.4649, 2.9200,
+               2.7924, 2.5945, 2.9356, 3.0852, 2.8836, 2.8358, 1.0480, 2.7357,
+               3.1858, 3.0659, 2.7072, 2.6789, 2.8074, 2.5861, 0,      2.6774,
+               2.6252, 2.3661, 2.5006, 2.4326, 0.8669, 2.1864, 2.1799, 2.6260,
+               2.2695];
+
+  // these values are obtained by trial and error
+  var dx = 93;
+  var dy = dx;
+  var span = 1000;
+
+  function prob(i) {
+    return Math.pow(probs[i], 1.5);
+  }
+
+  // some anchors
+  var positions = {
+    'go': {x: 1085, y: 1090, count: prob(0)},
+    'mediterranean_ave': {x: 965, y: 1090, count: prob(1)},
+    'in_jail': {x: 120, y: 1060, count: prob(10)},
+    'st_charles_pl': {x: 90, y: 965, count: prob(11)},
+    'free_parking': {x: 90, y: 90, count: prob(20)},
+    'visiting_jail': {x: 55, y: 1130, count: prob(40)}
+  };
+
+  // bottom row
+  for (var i=2; i<=9; i++) {
+    var previous = positions[places[i-1]];
+    positions[places[i]] = {x: previous.x - dx, y: previous.y, count: prob(i)};
+  }
+
+  // left column
+  for (var i=12; i<=19; i++) {
+    var previous = positions[places[i-1]];
+    positions[places[i]] = {x: previous.x, y: previous.y - dy, count: prob(i)};
+  }
+
+  // top row (reflect)
+  for (var i=21; i<=30; i++) {
+    var opp = positions[places[30-i]];
+    positions[places[i]] = {x: opp.x, y: opp.y - span, count: prob(i)};
+  }
+
+  // right column (reflect)
+  for (var i=31; i<=39; i++) {
+    var opp = positions[places[50-i]];
+    positions[places[i]] = {x: opp.x + span, y: opp.y, count: prob(i)};
+  }
+
+  var heat = [];
+  $.each(positions, function(k, v) {
+    heat.push(v);
+  });
+
+  return heat;
+
+})();
