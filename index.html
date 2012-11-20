@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Monopoly Heatmap</title>
+    <script src='heatmap.js'></script>
+    <script src='http://code.jquery.com/jquery.min.js'></script>
+    <style>
+      #heatmap {
+        background-image: url('board.jpg');
+        width: 1140px;
+        height: 1140px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id='heatmap'>
+    </div>
+    <script>
+
+      var heatmap = h337.create({
+        element: 'heatmap',
+        radius: 25,
+        visible: true
+      });
+
+      heatmap.store.setDataSet({
+        max: 3.95,
+        data: [
+          {x: 10, y: 20, count: 5}
+        ]
+      });
+
+      $('body').click(function(x) {
+        console.log(x);
+      });
+
+    </script>
+  </body>
+</html>
